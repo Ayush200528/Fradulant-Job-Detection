@@ -1,0 +1,2 @@
+python -m streamlit run main/app.py --to run app
+python web/backend.py --to run backend
