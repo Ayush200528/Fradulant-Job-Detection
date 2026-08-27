@@ -34,7 +34,10 @@ html.locked, body.splash-locked { overflow: hidden; height: 100%; }
 
 body {
   margin: 0;
-  background: var(--ink);
+  background:
+    radial-gradient(circle at 8% 4%, rgba(124, 92, 255, 0.22), transparent 28rem),
+    radial-gradient(circle at 92% 18%, rgba(255, 107, 157, 0.14), transparent 25rem),
+    var(--ink);
   color: var(--text);
   font-family: var(--font-body);
   line-height: 1.5;
@@ -189,6 +192,8 @@ body {
   padding: 20px 40px;
   border-bottom: 1px solid var(--border-soft);
   position: relative; z-index: 2;
+  background: rgba(27, 17, 48, 0.72);
+  backdrop-filter: blur(14px);
 }
 .masthead-left { display: flex; align-items: center; gap: 10px; }
 .mark {
@@ -279,16 +284,17 @@ body {
 
 /* ---------- Case file card ---------- */
 .case-file {
-  background: var(--panel);
+  background: linear-gradient(145deg, rgba(48, 32, 82, 0.98), rgba(39, 26, 69, 0.98));
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 32px 28px 28px;
   position: relative;
-  box-shadow: 0 24px 60px -30px rgba(0,0,0,0.6);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 24px 60px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.045);
+  transition: box-shadow 0.3s ease, transform 0.3s var(--ease-out);
 }
 .case-file:hover {
   box-shadow: 0 28px 70px -28px rgba(0,0,0,0.7);
+  transform: translateY(-2px);
 }
 
 .folder-tab {
@@ -373,6 +379,7 @@ input:focus-visible, .splash-btn:focus-visible {
 }
 
 textarea, input[type="text"] {
+  display: block;
   width: 100%;
   background: var(--panel-raised);
   border: 1px solid var(--border);
@@ -380,7 +387,7 @@ textarea, input[type="text"] {
   color: var(--text);
   font-family: var(--font-body);
   font-size: 14.5px;
-  padding: 14px 16px;
+  padding: 15px 16px;
   resize: vertical;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -390,6 +397,7 @@ textarea:focus, input[type="text"]:focus {
   box-shadow: 0 0 0 3px var(--accent-dim);
 }
 textarea::placeholder, input::placeholder { color: var(--text-faint); }
+textarea { min-height: 178px; line-height: 1.6; }
 
 .hidden { display: none !important; }
 
@@ -440,7 +448,15 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
   color: var(--text-faint);
   margin-top: 2px;
 }
-.threshold-control { display: flex; align-items: center; gap: 14px; }
+.threshold-control {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  background: rgba(18, 10, 32, 0.24);
+  border: 1px solid var(--border-soft);
+  border-radius: 9px;
+}
 input[type="range"] {
   flex: 1;
   -webkit-appearance: none;
@@ -485,6 +501,7 @@ input[type="range"]:hover::-moz-range-thumb { transform: scale(1.35); }
 /* ---------- Submit ---------- */
 .submit-btn {
   width: 100%;
+  min-height: 50px;
   background: linear-gradient(100deg, var(--accent), var(--accent-2));
   color: var(--ink-deep);
   border: none;
@@ -541,7 +558,7 @@ input[type="range"]:hover::-moz-range-thumb { transform: scale(1.35); }
   align-items: center;
   gap: 30px;
   padding: 30px 30px;
-  background: var(--panel);
+  background: linear-gradient(135deg, var(--panel-raised), var(--panel));
   border: 1px solid var(--border);
   border-radius: 14px;
   margin-bottom: 34px;
@@ -633,18 +650,27 @@ input[type="range"]:hover::-moz-range-thumb { transform: scale(1.35); }
   letter-spacing: 0.06em;
 }
 
-.reasoning { margin-bottom: 28px; }
+.reasoning {
+  margin-bottom: 28px;
+  padding: 24px;
+  background: rgba(39, 26, 69, 0.62);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+}
 .reasoning h2, .redflag-section h2 {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 15px;
-  margin: 0 0 4px;
+  font-size: 17px;
+  letter-spacing: -0.015em;
+  margin: 0 0 6px;
   color: var(--text);
 }
 .reasoning-sub {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--text-faint);
-  margin: 0 0 16px;
+  margin: 0 0 20px;
+  line-height: 1.6;
 }
 
 .feature-list { list-style: none; padding: 0; margin: 0; }
@@ -652,9 +678,12 @@ input[type="range"]:hover::-moz-range-thumb { transform: scale(1.35); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 11px 14px;
-  background: var(--panel);
+  gap: 18px;
+  min-height: 59px;
+  padding: 11px 16px;
+  background: rgba(48, 32, 82, 0.72);
   border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent-3);
   border-radius: 8px;
   margin-bottom: 6px;
   opacity: 0;
@@ -667,44 +696,83 @@ input[type="range"]:hover::-moz-range-thumb { transform: scale(1.35); }
   background: var(--panel-raised);
   transform: translateX(2px);
 }
+.feature-item.fraud { border-left-color: var(--fraud); }
+.feature-item.legit { border-left-color: var(--legit); }
 @keyframes feature-in {
   to { opacity: 1; transform: translateX(0); }
 }
 .feature-word {
   font-family: var(--font-mono);
-  font-size: 13.5px;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text);
+  overflow-wrap: anywhere;
 }
+.feature-meta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .feature-dir {
-  font-size: 11.5px;
+  font-size: 11px;
   font-family: var(--font-mono);
-  padding: 2px 8px;
-  border-radius: 10px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.01em;
 }
 .feature-dir.fraud { background: var(--fraud-glow); color: var(--fraud); }
 .feature-dir.legit { background: var(--legit-glow); color: var(--legit); }
 .feature-impact {
   font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-faint);
-  margin-left: 10px;
-  min-width: 52px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  min-width: 74px;
   text-align: right;
 }
+.impact-label {
+  display: block;
+  margin-bottom: 1px;
+  color: var(--text-faint);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-.redflag-section { margin-bottom: 28px; }
+.redflag-section {
+  margin-bottom: 28px;
+  padding: 22px 24px 24px;
+  background: linear-gradient(135deg, rgba(255, 77, 109, 0.10), rgba(39, 26, 69, 0.68));
+  border: 1px solid rgba(255, 77, 109, 0.24);
+  border-radius: 14px;
+}
+.redflag-section h2 { color: #ffd6df; margin-bottom: 14px; }
 .redflag-list { list-style: none; padding: 0; margin: 0; }
 .redflag-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 13.5px;
-  color: var(--fraud);
-  padding: 8px 14px;
-  background: var(--fraud-glow);
-  border-radius: 8px;
+  color: #ffd2dc;
+  padding: 11px 14px;
+  background: rgba(255, 77, 109, 0.15);
+  border: 1px solid rgba(255, 77, 109, 0.2);
+  border-radius: 9px;
   margin-bottom: 6px;
   font-family: var(--font-mono);
   opacity: 0;
   transform: translateX(-8px);
   animation: feature-in 0.4s var(--ease-out) forwards;
+}
+.redflag-list li::before {
+  content: '!';
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  color: var(--ink-deep);
+  background: var(--fraud);
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .disclaimer {
@@ -746,7 +814,18 @@ input[type="range"]:hover::-moz-range-thumb { transform: scale(1.35); }
   .masthead { padding: 16px 20px; }
   .masthead-right { display: none; }
   .wrap { padding: 44px 18px 100px; }
-  .intro h1 { font-size: 36px; }
+  .intro h1 { font-size: clamp(34px, 11vw, 42px); }
+  .case-file { padding: 26px 18px 20px; border-radius: 10px; }
+  .folder-tab { left: 18px; }
+  .tab { margin-right: 18px; font-size: 12px; }
+  .threshold-control { gap: 10px; }
+  #threshold-value { min-width: 34px; }
+  .reasoning, .redflag-section { padding: 19px 16px; border-radius: 11px; }
+  .feature-item { gap: 10px; padding: 10px 12px; }
+  .feature-meta { gap: 7px; }
+  .feature-impact { min-width: 52px; font-size: 11.5px; }
+  .impact-label { display: none; }
+  .feature-dir { padding: 4px 7px; }
   .verdict-stage { flex-direction: column; text-align: center; padding: 28px 20px; }
   .verdict-stage::before { background: radial-gradient(circle at 50% 20%, var(--legit-glow), transparent 55%); }
   .splash-title { font-size: 32px; }
