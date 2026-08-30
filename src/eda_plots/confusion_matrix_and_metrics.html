@@ -1,0 +1,41 @@
+<h2 class="sr-only">Confusion matrix and precision, recall, F1 score for the fraud detection model at threshold 0.25</h2>
+<div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:2px;max-width:480px;margin:0 auto 2rem;font-size:14px;">
+  <div></div>
+  <div style="text-align:center;padding:8px;color:var(--text-secondary);font-weight:500;">Predicted legit</div>
+  <div style="text-align:center;padding:8px;color:var(--text-secondary);font-weight:500;">Predicted fraud</div>
+
+  <div style="display:flex;align-items:center;padding:8px;color:var(--text-secondary);font-weight:500;">Actual legit</div>
+  <div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:16px;text-align:center;">
+    <div style="font-size:24px;font-weight:500;">2,946</div>
+    <div style="font-size:12px;">true negative</div>
+  </div>
+  <div style="background:var(--bg-danger);color:var(--text-danger);border-radius:var(--radius);padding:16px;text-align:center;">
+    <div style="font-size:24px;font-weight:500;">46</div>
+    <div style="font-size:12px;">false positive</div>
+  </div>
+
+  <div style="display:flex;align-items:center;padding:8px;color:var(--text-secondary);font-weight:500;">Actual fraud</div>
+  <div style="background:var(--bg-danger);color:var(--text-danger);border-radius:var(--radius);padding:16px;text-align:center;">
+    <div style="font-size:24px;font-weight:500;">31</div>
+    <div style="font-size:12px;">false negative</div>
+  </div>
+  <div style="background:var(--bg-success);color:var(--text-success);border-radius:var(--radius);padding:16px;text-align:center;">
+    <div style="font-size:24px;font-weight:500;">110</div>
+    <div style="font-size:12px;">true positive</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+  <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;text-align:center;">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;">Precision</div>
+    <div style="font-size:24px;font-weight:500;">0.705</div>
+  </div>
+  <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;text-align:center;">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;">Recall</div>
+    <div style="font-size:24px;font-weight:500;">0.780</div>
+  </div>
+  <div style="background:var(--surface-1);border-radius:var(--radius);padding:1rem;text-align:center;">
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;">F1 score</div>
+    <div style="font-size:24px;font-weight:500;">0.741</div>
+  </div>
+</div>
