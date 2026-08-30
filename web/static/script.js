@@ -1,12 +1,4 @@
-// ---------- Splash ----------
-const splash = document.getElementById("splash");
-const splashBtn = document.getElementById("splash-continue");
-function dismissSplash() {
-  splash.classList.add("dismissed");
-  document.body.classList.remove("splash-locked");
-}
-splashBtn.addEventListener("click", dismissSplash);
-
+// ---------- Element refs ----------
 const tabs = document.querySelectorAll(".tab");
 const tabIndicator = document.getElementById("tab-indicator");
 const textInput = document.getElementById("text-input");
@@ -22,36 +14,27 @@ const urlPreviewText = document.getElementById("url-preview-text");
 const scanOverlay = document.getElementById("scan-overlay");
 const caseNumberEl = document.getElementById("case-number");
 const sessionCountEl = document.getElementById("session-count");
-const verdictStage = document.getElementById("verdict-stage");
-const confettiLayer = document.getElementById("confetti-layer");
+const verdictCard = document.getElementById("verdict-card");
+const verdictBadge = document.getElementById("verdict-badge");
+const gaugeFill = document.getElementById("gauge-fill");
 
 let mode = "text";
 let caseCounter = Math.floor(1000 + Math.random() * 8999);
 let sessionCount = 0;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const CONFETTI_COLORS = ["#ffb703", "#ff6b9d", "#7c5cff", "#1fe0a8", "#ffffff"];
 
+// Gauge geometry (r = 84 in the SVG)
+const GAUGE_CIRCUMFERENCE = 2 * Math.PI * 84;
+gaugeFill.style.strokeDasharray = `${GAUGE_CIRCUMFERENCE}`;
+gaugeFill.style.strokeDashoffset = `${GAUGE_CIRCUMFERENCE}`;
+
+// ---------- Case reference ----------
 function nextCaseId() {
   caseCounter += 1;
   const stamp = Date.now().toString(36).slice(-3).toUpperCase();
   return `${caseCounter}-${stamp}`;
 }
-caseNumberEl.textContent = `CASE NO. ${nextCaseId()}`;
-
-// ---------- Cycling headline word ----------
-const CYCLE_WORDS = ["job posting", "recruiter message", "offer email", "DM offer"];
-let cycleIndex = 0;
-const cycleEl = document.getElementById("cycle-word");
-if (!reducedMotion) {
-  setInterval(() => {
-    cycleEl.classList.add("swap-out");
-    setTimeout(() => {
-      cycleIndex = (cycleIndex + 1) % CYCLE_WORDS.length;
-      cycleEl.textContent = CYCLE_WORDS[cycleIndex];
-      cycleEl.classList.remove("swap-out");
-    }, 350);
-  }, 2400);
-}
+caseNumberEl.textContent = `REF ${nextCaseId()}`;
 
 // ---------- Tab switching with sliding indicator ----------
 function positionIndicator(tabEl) {
@@ -62,8 +45,12 @@ window.addEventListener("load", () => positionIndicator(document.querySelector("
 
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
-    tabs.forEach((t) => t.classList.remove("active"));
+    tabs.forEach((t) => {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    });
     tab.classList.add("active");
+    tab.setAttribute("aria-selected", "true");
     positionIndicator(tab);
     mode = tab.dataset.mode;
     if (mode === "text") {
@@ -84,7 +71,7 @@ function updateSliderFill() {
   const val = parseFloat(thresholdSlider.value);
   const pct = ((val - min) / (max - min)) * 100;
   thresholdSlider.style.background =
-    `linear-gradient(90deg, var(--accent-2) 0%, var(--accent) ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+    `linear-gradient(90deg, var(--accent-2) 0%, var(--accent) ${pct}%, var(--track) ${pct}%, var(--track) 100%)`;
 }
 thresholdSlider.addEventListener("input", () => {
   thresholdValue.textContent = parseFloat(thresholdSlider.value).toFixed(2);
@@ -152,7 +139,7 @@ submitBtn.addEventListener("click", async () => {
 });
 
 // ---------- Count-up animation for confidence % ----------
-function animateCount(el, target, duration = 700) {
+function animateCount(el, target, duration = 800) {
   if (reducedMotion) {
     el.textContent = target.toFixed(1) + "%";
     return;
@@ -161,31 +148,30 @@ function animateCount(el, target, duration = 700) {
   function tick(now) {
     const progress = Math.min((now - start) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    const value = (target * eased).toFixed(1);
-    el.textContent = value + "%";
+    el.textContent = (target * eased).toFixed(1) + "%";
     if (progress < 1) requestAnimationFrame(tick);
     else el.textContent = target.toFixed(1) + "%";
   }
   requestAnimationFrame(tick);
 }
 
-// ---------- Confetti burst (legit verdict) ----------
-function fireConfetti() {
-  if (reducedMotion) return;
-  confettiLayer.innerHTML = "";
-  const originX = 64; // roughly center of the avatar column
-  for (let i = 0; i < 24; i++) {
-    const piece = document.createElement("div");
-    piece.className = "confetti-piece";
-    const color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
-    piece.style.background = color;
-    piece.style.left = (originX + (Math.random() * 100 - 50)) + "px";
-    piece.style.animationDelay = (Math.random() * 0.2) + "s";
-    piece.style.animationDuration = (0.9 + Math.random() * 0.6) + "s";
-    piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
-    confettiLayer.appendChild(piece);
+// ---------- Gauge fill animation ----------
+function setGauge(pct, isFraud) {
+  const clamped = Math.max(0, Math.min(100, pct));
+  const offset = GAUGE_CIRCUMFERENCE * (1 - clamped / 100);
+  gaugeFill.classList.toggle("fraud", isFraud);
+  if (reducedMotion) {
+    gaugeFill.style.transition = "none";
+    gaugeFill.style.strokeDashoffset = `${offset}`;
+    return;
   }
-  setTimeout(() => { confettiLayer.innerHTML = ""; }, 1800);
+  // reset then animate on next frame
+  gaugeFill.style.transition = "none";
+  gaugeFill.style.strokeDashoffset = `${GAUGE_CIRCUMFERENCE}`;
+  requestAnimationFrame(() => {
+    gaugeFill.style.transition = "stroke-dashoffset 900ms cubic-bezier(0.22,1,0.36,1)";
+    gaugeFill.style.strokeDashoffset = `${offset}`;
+  });
 }
 
 // ---------- Render ----------
@@ -193,47 +179,43 @@ function renderResult(data) {
   const isFraud = data.verdict === "fraudulent";
   const confidencePct = isFraud ? data.probability * 100 : (1 - data.probability) * 100;
 
-  const avatarWrap = document.getElementById("avatar-wrap");
-  avatarWrap.classList.remove("landing", "legit", "fraud");
-  void avatarWrap.offsetWidth; // restart animation
+  verdictCard.classList.remove("legit", "fraud");
+  verdictCard.classList.add(isFraud ? "fraud" : "legit");
 
-  verdictStage.classList.toggle("fraud-glow", isFraud);
-  verdictStage.classList.remove("shake-fraud");
+  verdictBadge.className = "verdict-badge " + (isFraud ? "fraud" : "legit");
+  verdictBadge.textContent = isFraud ? "Potentially fraudulent" : "Likely legitimate";
 
-  if (isFraud) {
-    avatarWrap.classList.add("fraud");
-    void verdictStage.offsetWidth;
-    verdictStage.classList.add("shake-fraud");
-  } else {
-    avatarWrap.classList.add("legit");
-  }
-  requestAnimationFrame(() => avatarWrap.classList.add("landing"));
-
-  if (!isFraud) {
-    setTimeout(fireConfetti, 150);
-  }
+  setGauge(confidencePct, isFraud);
 
   const confidenceEl = document.getElementById("confidence-value");
   confidenceEl.textContent = "0%";
   animateCount(confidenceEl, confidencePct);
 
   document.getElementById("verdict-detail").textContent = isFraud
-    ? "Likely fraudulent posting"
-    : "Likely legitimate posting";
+    ? "This posting shows patterns consistent with fraudulent listings."
+    : "This posting looks consistent with legitimate listings.";
   document.getElementById("verdict-case").textContent =
-    `${caseNumberEl.textContent} — threshold ${data.threshold.toFixed(2)}`;
+    `${caseNumberEl.textContent} · threshold ${data.threshold.toFixed(2)}`;
 
+  // SHAP-style feature bars, scaled to the largest absolute impact
   const featureList = document.getElementById("feature-list");
   featureList.innerHTML = "";
+  const maxImpact = data.top_features.reduce(
+    (m, f) => Math.max(m, Math.abs(f.impact)), 0) || 1;
+
   data.top_features.forEach((f, i) => {
     const li = document.createElement("li");
-    li.className = "feature-item";
+    li.className = "feature-item " + f.direction;
     li.style.animationDelay = `${i * 45}ms`;
+    const width = Math.max(6, (Math.abs(f.impact) / maxImpact) * 100);
     li.innerHTML = `
       <span class="feature-word">${escapeHtml(f.word)}</span>
-      <span style="display:flex; align-items:center;">
-        <span class="feature-dir ${f.direction}">${f.direction === "fraud" ? "→ fraud" : "→ legit"}</span>
-        <span class="feature-impact">${f.impact > 0 ? "+" : ""}${f.impact}</span>
+      <span class="feature-bar-wrap">
+        <span class="feature-bar" style="width:${width}%"></span>
+      </span>
+      <span class="feature-meta">
+        <span class="feature-dir">${f.direction === "fraud" ? "fraud" : "legit"}</span>
+        <span class="feature-impact mono">${f.impact > 0 ? "+" : ""}${f.impact}</span>
       </span>
     `;
     featureList.appendChild(li);
@@ -245,7 +227,7 @@ function renderResult(data) {
   if (data.red_flags && data.red_flags.length > 0) {
     data.red_flags.forEach((phrase, i) => {
       const li = document.createElement("li");
-      li.textContent = `"${phrase}"`;
+      li.textContent = phrase;
       li.style.animationDelay = `${data.top_features.length * 45 + i * 45}ms`;
       redflagList.appendChild(li);
     });

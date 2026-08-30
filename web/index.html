@@ -3,103 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Posting Review — Fraud Checker</title>
+<title>SignalGuard — Fraudulent Job Detection</title>
+<meta name="description" content="AI-powered detection of fraudulent job postings, recruiter messages, and offer emails, with transparent reasoning for every verdict.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="splash-locked">
+<body>
 
-  <!-- ================= SPLASH / INTRO ================= -->
-  <div id="splash" class="splash">
-    <div class="splash-glow"></div>
-    <div class="splash-content">
-      <div class="splash-avatar-wrap">
-        <svg id="splash-avatar" class="avatar-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="var(--accent-3)"/>
-              <stop offset="100%" stop-color="var(--accent-2)"/>
-            </linearGradient>
-          </defs>
-          <!-- static left arm stub -->
-          <line x1="58" y1="126" x2="38" y2="144" stroke="url(#bodyGrad)" stroke-width="20" stroke-linecap="round"/>
-          <circle cx="34" cy="148" r="12" fill="url(#bodyGrad)"/>
-          <!-- body -->
-          <ellipse class="avatar-body" cx="100" cy="112" rx="70" ry="66" fill="url(#bodyGrad)"/>
-          <!-- happy arm (wave) -->
-          <g class="arm-happy">
-            <line x1="150" y1="118" x2="180" y2="72" stroke="url(#bodyGrad)" stroke-width="22" stroke-linecap="round"/>
-            <circle cx="183" cy="66" r="15" fill="var(--accent-2)"/>
-            <rect x="176" y="38" width="10" height="24" rx="5" fill="var(--accent-2)"/>
-          </g>
-          <!-- face: happy -->
-          <g class="face-happy">
-            <circle cx="78" cy="104" r="7" fill="#2b2140"/>
-            <circle cx="122" cy="104" r="7" fill="#2b2140"/>
-            <path d="M75,128 Q100,150 125,128" fill="none" stroke="#2b2140" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="62" cy="120" r="8" fill="var(--accent-2)" opacity="0.55"/>
-            <circle cx="138" cy="120" r="8" fill="var(--accent-2)" opacity="0.55"/>
-          </g>
-        </svg>
-      </div>
-      <div class="mark-splash">◆</div>
-      <h1 class="splash-title">Posting Review</h1>
-      <p class="splash-desc">Paste any job posting, offer email, or recruiter message — I'll check it for fraud signals and show you exactly why, with a verdict you can actually see.</p>
-      <button id="splash-continue" class="splash-btn">Tap to continue →</button>
-    </div>
-  </div>
-
-  <div class="scanlines"></div>
-  <div class="grain"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
 
   <header class="masthead reveal" style="--reveal-delay:0ms">
-    <div class="masthead-left">
-      <span class="mark">◆</span>
-      <span class="mast-title">POSTING&nbsp;REVIEW</span>
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 4 6v6c0 5 3.4 8.3 8 10 4.6-1.7 8-5 8-10V6z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </span>
+      <span class="brand-name">SignalGuard</span>
     </div>
     <div class="masthead-right mono">
-      <span class="live-dot"></span>
-      <span id="session-count">0</span>&nbsp;reviewed this session
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="session-count">0</span>&nbsp;analyzed this session
     </div>
   </header>
 
   <main class="wrap">
 
-    <section class="intro reveal" style="--reveal-delay:80ms">
-      <div class="case-number mono" id="case-number">CASE NO. —</div>
-      <h1>Is this <span class="cycle-word-wrap"><span id="cycle-word" class="cycle-word">job posting</span></span><br>real?</h1>
-      <p class="sub">Paste the text, or a link to one, for review. Every case gets a verdict and the specific reasoning behind it.</p>
+    <section class="hero reveal" style="--reveal-delay:80ms">
+      <span class="eyebrow mono">ML FRAUD DETECTION</span>
+      <h1>Know if a job offer is <span class="grad">real</span> before you reply.</h1>
+      <p class="sub">Paste a job posting, recruiter message, or offer email. SignalGuard runs it through a trained model and returns a verdict with the exact signals behind the decision.</p>
+      <div class="hero-actions">
+        <a href="#workspace" class="btn-primary hero-cta">Analyze a posting</a>
+        <span class="hero-note mono">No account · results in seconds</span>
+      </div>
     </section>
 
-    <section class="case-file reveal" style="--reveal-delay:160ms">
-
-      <div class="folder-tab mono">EXHIBIT — POSTING</div>
+    <section id="workspace" class="workspace reveal" style="--reveal-delay:160ms">
 
       <div class="scan-overlay" id="scan-overlay" aria-hidden="true"><div class="scan-line"></div></div>
 
-      <div class="tabs" role="tablist">
-        <button class="tab active" data-mode="text" role="tab">Paste text</button>
-        <button class="tab" data-mode="url" role="tab">Paste URL</button>
-        <span class="tab-indicator" id="tab-indicator"></span>
+      <div class="card-head">
+        <h2>Submit a posting</h2>
+        <span class="case-number mono" id="case-number">REF —</span>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Input mode">
+        <button class="tab active" data-mode="text" role="tab" aria-selected="true">Paste text</button>
+        <button class="tab" data-mode="url" role="tab" aria-selected="false">Paste URL</button>
+        <span class="tab-indicator" id="tab-indicator" aria-hidden="true"></span>
       </div>
 
       <div class="input-area">
-        <textarea id="text-input" placeholder="Paste the full job posting here…" rows="9"></textarea>
+        <textarea id="text-input" placeholder="Paste the full job posting, recruiter DM, or offer email here…" rows="9"></textarea>
         <div id="url-input-wrap" class="hidden">
-          <input id="url-input" type="text" placeholder="https://company.com/careers/job-123">
-          <p class="hint">Works for public company career pages and most job boards. LinkedIn blocks automated fetching — copy-paste those into "Paste text" instead.</p>
-          <div id="url-preview" class="url-preview hidden">
-            <span class="preview-label">Extracted text preview</span>
-            <p id="url-preview-text"></p>
-          </div>
+          <input id="url-input" type="text" inputmode="url" placeholder="https://company.com/careers/job-123">
+          <p class="hint">Works for public company career pages and most job boards. LinkedIn blocks automated fetching — copy-paste those into &ldquo;Paste text&rdquo; instead.</p>
         </div>
       </div>
 
       <div class="threshold-row">
         <label for="threshold">
-          Sensitivity
-          <span class="threshold-hint">lower catches more fraud, higher reduces false alarms</span>
+          Detection sensitivity
+          <span class="threshold-hint">Lower catches more fraud · higher reduces false alarms</span>
         </label>
         <div class="threshold-control">
           <input type="range" id="threshold" min="0.10" max="0.90" step="0.05" value="0.25">
@@ -107,89 +77,62 @@
         </div>
       </div>
 
-      <button id="submit-btn" class="submit-btn">
-        <span class="btn-label">Review posting</span>
+      <button id="submit-btn" class="btn-primary submit-btn">
+        <span class="btn-label">Analyze posting</span>
+        <span class="btn-spinner" aria-hidden="true"></span>
       </button>
 
-      <p id="error-msg" class="error-msg hidden"></p>
+      <p id="error-msg" class="error-msg hidden" role="alert"></p>
     </section>
 
-    <section id="result-section" class="result-section hidden">
+    <section id="result-section" class="result-section hidden" aria-live="polite">
 
-      <div class="verdict-stage" id="verdict-stage">
-        <div class="confetti-layer" id="confetti-layer"></div>
-
-        <div id="avatar-wrap" class="avatar-wrap">
-          <svg id="avatar-svg" class="avatar-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bodyGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="var(--accent-3)"/>
-                <stop offset="100%" stop-color="var(--accent-2)"/>
-              </linearGradient>
-            </defs>
-            <!-- static left arm stub -->
-            <line x1="58" y1="126" x2="38" y2="144" stroke="url(#bodyGrad2)" stroke-width="20" stroke-linecap="round"/>
-            <circle cx="34" cy="148" r="12" fill="url(#bodyGrad2)"/>
-            <!-- body -->
-            <ellipse class="avatar-body" cx="100" cy="112" rx="70" ry="66" fill="url(#bodyGrad2)"/>
-
-            <!-- arm: thumbs up (legit) -->
-            <g class="arm-up avatar-reaction-part">
-              <line x1="150" y1="118" x2="182" y2="80" stroke="url(#bodyGrad2)" stroke-width="22" stroke-linecap="round"/>
-              <circle cx="186" cy="74" r="15" fill="var(--legit)"/>
-              <rect x="179" y="46" width="10" height="24" rx="5" fill="var(--legit)"/>
-            </g>
-            <!-- arm: thumbs down (fraud) -->
-            <g class="arm-down avatar-reaction-part">
-              <line x1="150" y1="118" x2="182" y2="156" stroke="url(#bodyGrad2)" stroke-width="22" stroke-linecap="round"/>
-              <circle cx="186" cy="162" r="15" fill="var(--fraud)"/>
-              <rect x="179" y="168" width="10" height="24" rx="5" fill="var(--fraud)"/>
-            </g>
-
-            <!-- face: happy (legit) -->
-            <g class="face-happy avatar-reaction-part">
-              <circle cx="78" cy="104" r="7" fill="#2b2140"/>
-              <circle cx="122" cy="104" r="7" fill="#2b2140"/>
-              <path d="M75,128 Q100,150 125,128" fill="none" stroke="#2b2140" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="62" cy="120" r="8" fill="var(--legit)" opacity="0.5"/>
-              <circle cx="138" cy="120" r="8" fill="var(--legit)" opacity="0.5"/>
-            </g>
-
-            <!-- face: suspicious (fraud) -->
-            <g class="face-sad avatar-reaction-part">
-              <path d="M68,92 L86,99" stroke="#2b2140" stroke-width="5" stroke-linecap="round"/>
-              <path d="M132,92 L114,99" stroke="#2b2140" stroke-width="5" stroke-linecap="round"/>
-              <ellipse cx="78" cy="107" rx="7" ry="3.5" fill="#2b2140"/>
-              <ellipse cx="122" cy="107" rx="7" ry="3.5" fill="#2b2140"/>
-              <path d="M76,138 Q100,122 124,138" fill="none" stroke="#2b2140" stroke-width="6" stroke-linecap="round"/>
-              <path d="M138,80 Q144,90 138,98 Q130,94 132,84 Z" fill="var(--accent-3)" opacity="0.85"/>
-            </g>
+      <div class="verdict-card" id="verdict-card">
+        <div class="gauge-wrap">
+          <svg class="gauge" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="gauge-track" cx="100" cy="100" r="84"/>
+            <circle class="gauge-fill" id="gauge-fill" cx="100" cy="100" r="84"
+                    transform="rotate(-90 100 100)"/>
           </svg>
+          <div class="gauge-center">
+            <span class="confidence-value mono" id="confidence-value">0%</span>
+            <span class="confidence-label">confidence</span>
+          </div>
         </div>
 
         <div class="verdict-copy">
-          <div class="confidence mono"><span id="confidence-value">0%</span> confidence</div>
-          <div class="verdict-detail" id="verdict-detail"></div>
-          <div class="verdict-case mono" id="verdict-case"></div>
+          <span class="verdict-badge" id="verdict-badge">Analyzing…</span>
+          <h2 class="verdict-detail" id="verdict-detail"></h2>
+          <p class="verdict-case mono" id="verdict-case"></p>
         </div>
       </div>
 
-      <div class="reasoning">
-        <h2>Why this verdict</h2>
-        <p class="reasoning-sub">Words and phrases from this posting that shaped the decision, ranked by influence.</p>
+      <div class="reasoning panel">
+        <h3>Why this verdict</h3>
+        <p class="panel-sub">Words and phrases from this posting that shaped the decision, ranked by influence.</p>
         <ul id="feature-list" class="feature-list"></ul>
       </div>
 
-      <div id="redflag-section" class="redflag-section hidden">
-        <h2>Additional phrases flagged</h2>
+      <div id="redflag-section" class="redflag-section panel hidden">
+        <h3>Additional phrases flagged</h3>
         <ul id="redflag-list" class="redflag-list"></ul>
       </div>
+
+      <details id="url-preview" class="url-preview hidden">
+        <summary>View extracted text</summary>
+        <p id="url-preview-text"></p>
+      </details>
 
       <p class="disclaimer">This is a probability estimate based on patterns in historical postings, not a certainty. Always verify independently — check company registration, recruiter profiles, and official domains before acting.</p>
 
     </section>
 
   </main>
+
+  <footer class="site-footer mono">
+    <span>SignalGuard</span>
+    <span>Model-driven analysis · verify before you act</span>
+  </footer>
 
   <script src="/static/script.js"></script>
 </body>
